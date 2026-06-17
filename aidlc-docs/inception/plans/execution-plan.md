@@ -110,7 +110,7 @@ flowchart TD
 
 | Stage                 | Status                                         |
 | --------------------- | ---------------------------------------------- |
-| Functional Design     | ✅ EXECUTE — Design the DSL macro API surface  |
+| Functional Design     | ✅ COMPLETE — DSL macro API designed           |
 | NFR Requirements      | ❌ SKIP                                        |
 | NFR Design            | ❌ SKIP                                        |
 | Infrastructure Design | ❌ SKIP                                        |

@@ -33,5 +33,7 @@
 | INCEPTION - Workspace Detection   | ✅ Complete |
 | INCEPTION - Requirements Analysis | ✅ Complete |
 | INCEPTION - Workflow Planning     | ✅ Complete |
-| CONSTRUCTION                      | ⏳ Pending  |
+| CONSTRUCTION - Functional Design  | ✅ Complete |
+| CONSTRUCTION - Code Generation    | ⏳ Pending  |
+| CONSTRUCTION - Build and Test     | ⏳ Pending  |
 | OPERATIONS                        | ⏳ Pending  |

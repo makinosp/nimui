@@ -52,3 +52,23 @@ execution plan at `aidlc-docs/inception/plans/execution-plan.md`. **Context**:
 INCEPTION - Workflow Planning
 
 ---
+
+## User Approval — Proceed to Functional Design
+
+**Timestamp**: 2026-06-17T00:00:00Z **User Input**: "Using AI-DLC,
+承認し、**Functional Design** (DSLマクロAPI設計) に進む。" **AI Response**:
+Approved. Transitioning from INCEPTION - Workflow Planning to CONSTRUCTION -
+Functional Design (DSL macro API design). **Context**: INCEPTION →
+CONSTRUCTION - Functional Design
+
+---
+
+## Functional Design — Design Decisions Collected
+
+**Timestamp**: 2026-06-17T00:00:00Z **User Input**: Q1=B (AST macros), Q2=A
+(Concept), Q3=A (Method chain / UFCS), Q4=A (Runtime string concat), Q5=A (CSS
+Flexbox), Q6=A (Inline Nim code), Q7=B (Submodule per component), Q8=A (None —
+keep MVP minimal) **AI Response**: All design decisions recorded. Created 4
+functional design artifacts. **Context**: CONSTRUCTION - Functional Design
+
+---
