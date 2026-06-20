@@ -91,3 +91,42 @@ functional design artifacts. **Context**: CONSTRUCTION - Functional Design
 **Context**: CONSTRUCTION - Functional Design - Refined
 
 ---
+
+## Code Generation — MVP Implementation Complete
+
+**Timestamp**: 2026-06-20T00:00:00Z **User Input**: "Using AI-DLC,
+Code Generationを開始してください。" **AI Response**: Implemented MVP
+codebase:
+
+- `nimui.nimble` — Nimble package definition with `build`, `buildExample`,
+  `test`, `testJs`, `clean` tasks
+- `src/nimui.nim` — Top-level module with macros (`ui`, `Text`, `VStack`,
+  `HStack`, `Button`), `UiBuilder`, JS backend guard (BR-12)
+- `src/nimui/core.nim` — `Modifier`, `RootKind`, `RootView`, `Handler`
+- `src/nimui/modifiers.nim` — UFCS modifier procs (`padding`,
+  `foregroundColor`, `font`) with BR-06 validation
+- `src/nimui/render.nim` — HTML rendering with HTML escaping (BR-07),
+  CSS class naming `nimui-{kind}-{hash}` (BR-09)
+- `tests/test_nimui.nim` — 10 unit tests, all passing on Nim C backend
+- `examples/hello.nim` — Working demo that compiles to JS and produces
+  valid HTML when executed under Node.js with a DOM stub
+
+**Build verification**:
+- `nim c -r --path:src tests/test_nimui.nim` — 10/10 tests pass
+- `nim js --path:src -o:build/nimui.js src/nimui.nim` — success
+- `nim js --path:src -o:build/hello.js examples/hello.nim` — success
+- Node.js execution of hello.js produces valid HTML containing all
+  expected elements (VStack/HStack divs, Text spans, Button, script
+  handler)
+
+**Known limitations** (deferred to post-MVP):
+- Action block bodies are emitted as empty JS functions; serializing
+  the Nim AST back to source via `repr`/`treeRepr`/`$action` triggers an
+  internal `=destroy` operator error on `NimNode` in Nim 2.2.4. MVP
+  emits placeholder handler bodies; a future enhancement will use the
+  Nim compiler as a library or compile-time codegen to embed the Nim
+  body as actual JS.
+
+**Context**: CONSTRUCTION - Code Generation - MVP Complete
+
+---
