@@ -72,3 +72,22 @@ keep MVP minimal) **AI Response**: All design decisions recorded. Created 4
 functional design artifacts. **Context**: CONSTRUCTION - Functional Design
 
 ---
+
+## Functional Design Refinement — JS Backend Decision
+
+**Timestamp**: 2026-06-20T00:00:00Z **User Input**: "議論の結果を機能設計に反映"
+**AI Response**: プロジェクトの実現可能性を検討した結果、コンパイルターゲットを
+**Nim JS Backend (`nim js`)** に決定。以下の設計書を更新:
+
+- `requirements.md` → NFR-04 (Compilation Target) 追加
+- `business-logic-model.md` → Overview/Button にJS backendを明記
+- `business-rules.md` → BR-12 (JS Backend Compilation Target) 追加
+- `frontend-components.md` → Button のアクション実装、レンダリングフローをJS
+  バックエンド対応に更新
+- `aidlc-state.md` → 設計決定テーブル追加
+
+**決定理由**: Buttonアクションブロック内のNimコードをブラウザ上で実行するため
+には、Nim JSバックエンドでJavaScriptへコンパイルする必要があるため。
+**Context**: CONSTRUCTION - Functional Design - Refined
+
+---
