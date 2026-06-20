@@ -88,6 +88,19 @@ recursively, ensuring nested components are evaluated before their parent.
 All view type resolution happens at compile time via macro expansion. No runtime
 type introspection is used for rendering dispatch.
 
+### BR-12: JS Backend Compilation Target
+
+The nimui library requires the **Nim JS backend** (`nim js`) for compilation.
+
+- **Rationale**: Button action blocks contain Nim code that must be compiled to
+  JavaScript for browser execution
+- **Constraint**: The library is not guaranteed to function correctly with the
+  Nim C backend (C code cannot run in browser context)
+- **Build Command**: `nim js -c src/nimui.nim` (or via Nimble with a custom
+  task)
+- **Validation**: Header check in `nimui.nim` — compile-time error if not
+  compiling with `nim js`
+
 ## Future Constraints (Post-MVP)
 
 ### BR-F1: No State Management in MVP

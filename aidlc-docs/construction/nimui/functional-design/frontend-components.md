@@ -118,7 +118,7 @@ macro Button(text: string, action: untyped): untyped
 | Prop     | Type              | Required | Description                       |
 | -------- | ----------------- | -------- | --------------------------------- |
 | `text`   | `string`          | Yes      | Button label text                 |
-| `action` | `untyped` (block) | Yes      | Inline Nim code executed on click |
+| `action` | `untyped` (block) | Yes      | Nim code block, compiled to JS via Nim JS backend |
 
 **Usage**:
 
@@ -126,6 +126,14 @@ macro Button(text: string, action: untyped): untyped
 Button(text = "Click Me"):
   echo "Button was clicked!"
 ```
+
+**Behavior**:
+
+- The Nim code block in `action` is compiled to a JavaScript function by the Nim
+  JS backend (`nim js`)
+- Each button gets a unique handler ID (e.g., `nimui_handler_1`)
+- The function is embedded in a `<script>` tag within the generated HTML
+- At runtime, the browser's `onclick` event calls the generated JS function
 
 **HTML Output**:
 
@@ -191,7 +199,13 @@ let doc = HtmlDocument(
 )
 ```
 
-### 3. User calls render at runtime
+### 3. Nim JS backend compiles to JavaScript
+
+All Nim code (including the `ui` block) is compiled to JavaScript via `nim js`.
+This includes Button action blocks — they become JavaScript functions accessible
+from the browser.
+
+### 4. User calls render at runtime (in browser)
 
 ```nim
 let htmlString = doc.render()
@@ -211,11 +225,13 @@ This concatenates the HTML string:
 
 In the MVP, user interaction is limited to:
 
-1. **Button clicks** — Inline Nim code is embedded as JavaScript event handlers
+1. **Button clicks** — The Button's action block (Nim code) is compiled to a
+   JavaScript function via the Nim JS backend (`nim js`) and registered as an
+   `onclick` handler in the browser
 2. **Static rendering** — No state management; each `ui` call produces a fixed
-   HTML string
-3. **No reactivity** — Re-rendering requires re-executing the `ui` macro (at
-   runtime, the Nim code)
+   HTML string at runtime
+3. **No reactivity** — Re-rendering requires re-executing the `ui` proc (the
+   Nim/JS binary must be re-run; no DOM diffing in MVP)
 
 ## Rendering Output Flow
 
@@ -225,12 +241,12 @@ DSL Code (Nim)
     ▼  [compile-time macro expansion]
 Nim code with HTML builder calls
     │
-    ▼  [compile to executable]
-Nim binary
+    ▼  [nim js — compile to JavaScript]
+JavaScript bundle (.js)
     │
-    ▼  [runtime execution]
-HTML string output
+    ▼  [browser loads .js]
+Runtime execution — HTML string constructed in JS
     │
-    ▼  [browser/webview]
-Rendered UI
+    ▼  [innerHTML or DOM insert]
+Rendered UI in browser
 ```

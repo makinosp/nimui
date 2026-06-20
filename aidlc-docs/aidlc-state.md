@@ -4,7 +4,15 @@
 
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-17T00:00:00Z
-- **Current Stage**: INCEPTION - Workflow Planning
+- **Current Stage**: CONSTRUCTION - Functional Design (Refined — JS Backend Decision Added)
+
+## Design Decisions
+
+| Decision | Value | Rationale |
+| -------- | ----- | --------- |
+| Compilation Target | Nim JS Backend (`nim js`) | Button action blocks (Nim code) must compile to JavaScript for browser execution |
+| Button Action | Nim code block → JS function via `nim js` | Enables direct browser event handling without a custom transpiler |
+| Build Command | `nim js -c src/nimui.nim` | Standard Nim JS compilation |
 
 ## Workspace State
 
@@ -33,7 +41,7 @@
 | INCEPTION - Workspace Detection   | ✅ Complete |
 | INCEPTION - Requirements Analysis | ✅ Complete |
 | INCEPTION - Workflow Planning     | ✅ Complete |
-| CONSTRUCTION - Functional Design  | ✅ Complete |
+| CONSTRUCTION - Functional Design  | ✅ Complete (refined with JS Backend Decision) |
 | CONSTRUCTION - Code Generation    | ⏳ Pending  |
 | CONSTRUCTION - Build and Test     | ⏳ Pending  |
 | OPERATIONS                        | ⏳ Pending  |

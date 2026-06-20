@@ -6,6 +6,10 @@ nimui is a SwiftUI-style declarative UI DSL embedded in Nim via compile-time AST
 macros. The DSL expresses UI hierarchies as nested Nim expressions, which are
 transformed by macros into HTML/CSS rendering code executed at runtime.
 
+**Compilation Target**: nimui targets the **Nim JS backend** (`nim js`). All DSL
+code is compiled to JavaScript and executed in the browser. This enables Button
+action blocks (Nim code) to be directly compiled into JavaScript event handlers.
+
 ## Macro Transformation Pipeline
 
 ```
@@ -121,7 +125,9 @@ Any type that implements a `render()` proc returning a `string` satisfies the
 - **Signature**: `Button(text: string, action: untyped): auto` (macro with block
   for action)
 - **Purpose**: Interactive clickable element
-- **Action**: Inline Nim code block executed on click
+- **Action**: Inline Nim code block, compiled to JavaScript via Nim JS backend
+- **JS Backend**: The action block is emitted as a JavaScript function in the
+  generated HTML's `<script>` tag, enabling direct browser execution
 - **HTML Output**: `<button onclick="...">text</button>`
 
 ## Modifier Chain

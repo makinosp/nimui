@@ -59,6 +59,12 @@ The project shall have a standard Nimble package structure with:
 - Unit tests for DSL parsing and HTML generation
 - Property-based tests not required at this stage
 
+### NFR-04: Compilation Target
+
+- The library targets the **Nim JS backend** (`nim js`) by default
+- Button action blocks written in Nim are compiled to JavaScript and executed in the browser
+- Nim C backend is not supported in MVP (no browser execution context)
+
 ## Out of Scope (MVP)
 
 - State management / reactivity system
