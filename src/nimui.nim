@@ -9,7 +9,7 @@
 ## macros are split across modules with overlapping `import std/macros`.
 
 from nimui/core import Modifier, RootKind, RootView, Handler
-from nimui/modifiers import padding, foregroundColor, font
+
 from nimui/render import renderRoot, renderHandlers
 import std/macros as macrosMod
 
@@ -17,16 +17,16 @@ when not defined(js) and not defined(nimuiTestMode):
   {.error: "nimui requires the Nim JS backend. Use `nim js` to compile.".}
 
 type
-  ButtonGlobals* = object
-    nextId*:   int
-    handlers*: seq[Handler]
-
-var gButton*: ButtonGlobals
-
-type
   UiBuilder* = object
     root*:     RootView
     handlers*: seq[Handler]
+    nextId*:   int
+
+## Thread-local storage for Button handlers during ui macro expansion.
+## This avoids the need for a global variable while allowing Button macros
+## to register handlers that the ui macro can collect.
+var gButtonHandlers* {.threadvar.}: seq[Handler]
+var gButtonNextId* {.threadvar.}: int
 
 proc render*(b: UiBuilder): string =
   ## Renders a `UiBuilder` to a complete HTML fragment, including any
@@ -93,11 +93,17 @@ macro Button*(text: untyped, action: untyped): untyped =
     if text.kind != nnkStrLit:
       error("nimui Error: Button requires text = \"...\" string argument (BR-04)", text)
     label = text.strVal
+  ## Validate that an action block is provided (BR-03)
+  if action.kind != nnkStmtList and action.kind != nnkStmtListExpr:
+    error("nimui Error: Button requires an action block (BR-03)", action)
+  ## For now we store a placeholder string for the action code. In a full
+  ## implementation this would be the source code of the block, compiled to JS.
+  let actionCode = "/* action code */"
   result = quote do:
     block:
-      inc gButton.nextId
-      let hid = gButton.nextId
-      gButton.handlers.add(Handler(id: hid, bodyStmt: ""))
+      inc gButtonNextId
+      let hid = gButtonNextId
+      gButtonHandlers.add(Handler(id: hid, bodyStmt: `actionCode`))
       RootView(kind: rkButton,
                label: `label`,
                handlerId: hid,
@@ -115,7 +121,7 @@ macro ui*(body: untyped): untyped =
   let rootExpr = body[0]
   result = quote do:
     block:
-      gButton.nextId = 0
-      gButton.handlers = @[]
+      gButtonNextId = 0
+      gButtonHandlers = @[]
       let root = `rootExpr`
-      UiBuilder(root: root, handlers: gButton.handlers)
+      UiBuilder(root: root, handlers: gButtonHandlers, nextId: gButtonNextId)

@@ -31,16 +31,24 @@ proc cssHash*(kind: RootKind, view: RootView): string =
   of rkButton:
     h = h !& hash(view.label)
     h = h !& hash(view.handlerId)
+  # Include modifiers in the hash to differentiate styles
+  for m in view.modifiers:
+    h = h !& hash(m.property)
+    h = h !& hash(m.value)
   result = $h.abs.toHex[0 ..< min(8, ($h.abs.toHex).len)]
 
 proc styleAttr*(mods: seq[Modifier]): string =
   ## Joins modifiers into a `style="..."` attribute. Empty when no modifiers.
   if mods.len == 0:
     return ""
-  var parts: seq[string] = @[]
+  # Build the attribute using a pre‑allocated string for efficiency.
+  var buf = newStringOfCap(mods.len * 20)  # rough estimate per modifier
   for m in mods:
-    parts.add(m.property & ":" & m.value & ";")
-  result = " style=\"" & parts.join("") & "\""
+    buf.add(m.property)
+    buf.add(":")
+    buf.add(m.value)
+    buf.add(";")
+  result = " style=\"" & buf & "\""
 
 proc classAttr*(kind: RootKind, view: RootView): string =
   ## BR-09: `nimui-{kind}-{hash}`.
@@ -90,9 +98,12 @@ proc renderHandlers*(handlers: seq[Handler]): string =
   ## `bodyStmt` is emitted as-is into the function body (BR-12).
   if handlers.len == 0:
     return ""
-  var buf = ""
+  var buf = newStringOfCap(handlers.len * 80)
   for h in handlers:
     buf.add("function nimui_handler_" & $h.id & "() {\n")
-    buf.add("  " & h.bodyStmt & "\n")
+    if h.bodyStmt.strip().len == 0:
+      buf.add("  // no action\n")
+    else:
+      buf.add("  " & h.bodyStmt & "\n")
     buf.add("}\n")
   buf
