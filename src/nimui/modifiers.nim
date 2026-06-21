@@ -1,4 +1,4 @@
-## nimui/modifiers — UFCS modifier procs
+## NimUI/modifiers — UFCS modifier procs
 ##
 ## Each modifier appends a CSS key/value pair to the view's `modifiers` seq.
 ## Modifiers are order-independent at runtime; duplicates take last-wins (BR-05).

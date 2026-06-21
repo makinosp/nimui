@@ -1,4 +1,4 @@
-## nimui unit tests — MVP coverage
+## NimUI unit tests — MVP coverage
 ##
 ## Tests run on the Nim C backend (no DOM) and validate:
 ##  - macro expansion produces a UiBuilder
@@ -14,7 +14,7 @@ import nimui/core
 import nimui/modifiers
 import std/[unittest, strutils]
 
-suite "nimui MVP":
+suite "NimUI MVP":
   test "Text renders a span":
     let doc = ui:
       Text("Hello")

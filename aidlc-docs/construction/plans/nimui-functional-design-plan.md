@@ -1,8 +1,8 @@
-# Functional Design Plan — nimui DSL Macro API
+# Functional Design Plan — NimUI DSL Macro API
 
 ## Unit Information
 
-- **Unit Name**: nimui Library
+- **Unit Name**: NimUI Library
 - **Description**: SwiftUI-style DSL in Nim with HTML/CSS rendering backend
 - **Deliverable**: DSL macro API design document
 

@@ -1,4 +1,4 @@
-## nimui example — "Hello, World!" demo
+## NimUI example — "Hello, World!" demo
 ##
 ## Build with: nimble buildExample
 ## Then open build/hello.html in a browser (or `nim js` directly).
@@ -16,7 +16,7 @@ let doc = ui:
     HStack:
       Text("Welcome to ")
         .foregroundColor("#666")
-      Text("nimui")
+      Text("NimUI")
         .foregroundColor("#007acc")
         .font(20)
     Button(text = "Click me"):

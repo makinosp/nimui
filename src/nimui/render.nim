@@ -1,4 +1,4 @@
-## nimui/render — HTML rendering for RootView
+## NimUI/render — HTML rendering for RootView
 ##
 ## String concatenation at runtime (Q4 design decision). HTML-escapes user
 ## text to prevent XSS (BR-07). CSS classes follow `nimui-{kind}-{hash}`

@@ -11,7 +11,7 @@
 - **User-facing changes**: Yes — new DSL API for Nim developers
 - **Structural changes**: N/A (new project)
 - **Data model changes**: No
-- **API changes**: Yes — public API of the nimui library
+- **API changes**: Yes — public API of the NimUI library
 - **NFR impact**: Minimal — MVP phase, NFRs deferred
 
 ### Risk Assessment
@@ -29,12 +29,12 @@
 | **Reverse Engineering**   | ❌ Skip    | Greenfield — no existing codebase                                    |
 | **User Stories**          | ❌ Skip    | Single developer, clear MVP scope, no multiple personas              |
 | **Application Design**    | ❌ Skip    | Single component library — no complex service/component architecture |
-| **Units Generation**      | ❌ Skip    | Single unit of work: the nimui library                               |
+| **Units Generation**      | ❌ Skip    | Single unit of work: the NimUI library                               |
 | **Functional Design**     | ✅ Execute | DSL macro API design needs upfront planning                          |
 | **NFR Requirements**      | ❌ Skip    | Deferred to post-MVP                                                 |
 | **NFR Design**            | ❌ Skip    | Deferred to post-MVP                                                 |
 | **Infrastructure Design** | ❌ Skip    | No infrastructure required                                           |
-| **Code Generation**       | ✅ Execute | Single unit — the nimui library                                      |
+| **Code Generation**       | ✅ Execute | Single unit — the NimUI library                                      |
 | **Build and Test**        | ✅ Execute | Unit tests and build verification                                    |
 
 ## Workflow Visualization

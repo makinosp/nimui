@@ -1,4 +1,4 @@
-# Requirements — nimui
+# Requirements — NimUI
 
 ## Intent Analysis Summary
 

@@ -1,8 +1,8 @@
-# nimui
+# NimUI
 
 **SwiftUI-style declarative UI DSL for Nim** — targets HTML/CSS via the Nim JS backend.
 
-nimui lets you build web frontends entirely in Nim. Describe your UI with a declarative DSL inspired by SwiftUI, compile it to JavaScript with `nim js`, and render it in the browser.
+NimUI lets you build web frontends entirely in Nim. Describe your UI with a declarative DSL inspired by SwiftUI, compile it to JavaScript with `nim js`, and render it in the browser.
 
 ## Features
 
@@ -40,7 +40,7 @@ let doc = ui:
     HStack:
       Text("Welcome to ")
         .foregroundColor("#666")
-      Text("nimui")
+      Text("NimUI")
         .foregroundColor("#007acc")
         .font(20)
     Button(text = "Click me"):
@@ -61,7 +61,7 @@ Then include the output JS in an HTML page.
 
 | Command              | Description                          |
 | -------------------- | ------------------------------------ |
-| `nimble build`       | Build the nimui library (JS backend) |
+| `nimble build`       | Build the NimUI library (JS backend) |
 | `nimble buildExample`| Build the hello-world example        |
 | `nimble test`        | Run unit tests (C backend)           |
 | `nimble testJs`      | Smoke test — compile to JS           |

@@ -1,4 +1,4 @@
-# Domain Entities — nimui DSL Type System
+# Domain Entities — NimUI DSL Type System
 
 ## Core Type Hierarchy
 

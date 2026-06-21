@@ -1,4 +1,4 @@
-# Business Rules — nimui DSL Macro Constraints
+# Business Rules — NimUI DSL Macro Constraints
 
 ## DSL Syntax Rules
 
@@ -9,7 +9,7 @@ HStack, or other view).
 
 - **Validation**: Compile-time error if block contains multiple top-level
   expressions in sequence
-- **Error Message**: `nimui Error: ui block must contain a single root view`
+- **Error Message**: `NimUI Error: ui block must contain a single root view`
 
 ### BR-02: Well-Formed Component Nesting
 
@@ -19,21 +19,21 @@ body).
 - **Validation**: Compile-time check that the macro receives a valid statement
   list
 - **Error Message**:
-  `nimui Error: VStack/HStack requires a block with child views`
+  `NimUI Error: VStack/HStack requires a block with child views`
 
 ### BR-03: Button Must Have Action Block
 
 Button requires both a `text` argument and an action code block.
 
 - **Validation**: Compile-time detection of missing action block
-- **Error Message**: `nimui Error: Button requires an action block`
+- **Error Message**: `NimUI Error: Button requires an action block`
 
 ### BR-04: Text Requires String Argument
 
 Text must receive a string literal as its first argument.
 
 - **Validation**: Compile-time check for string literal type
-- **Error Message**: `nimui Error: Text requires a string argument`
+- **Error Message**: `NimUI Error: Text requires a string argument`
 
 ## Modifier Rules
 
@@ -90,7 +90,7 @@ type introspection is used for rendering dispatch.
 
 ### BR-12: JS Backend Compilation Target
 
-The nimui library requires the **Nim JS backend** (`nim js`) for compilation.
+The NimUI library requires the **Nim JS backend** (`nim js`) for compilation.
 
 - **Rationale**: Button action blocks contain Nim code that must be compiled to
   JavaScript for browser execution

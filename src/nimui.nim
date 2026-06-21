@@ -1,4 +1,4 @@
-## nimui — SwiftUI-style declarative UI DSL for Nim
+## NimUI — SwiftUI-style declarative UI DSL for Nim
 ##
 ## Public API entry point. Re-exports the DSL macros and runtime types.
 ## Compilation target: Nim JS backend (`nim js`). See BR-12.
@@ -14,7 +14,7 @@ from nimui/render import renderRoot, renderHandlers
 import std/macros as macrosMod
 
 when not defined(js) and not defined(nimuiTestMode):
-  {.error: "nimui requires the Nim JS backend. Use `nim js` to compile.".}
+  {.error: "NimUI requires the Nim JS backend. Use `nim js` to compile.".}
 
 type
   UiBuilder* = object
@@ -42,7 +42,7 @@ proc render*(b: UiBuilder): string =
 macro Text*(arg: untyped): untyped =
   ## BR-04: requires a string literal as the first argument.
   if arg.kind != nnkStrLit:
-    error("nimui Error: Text requires a string argument (BR-04)", arg)
+    error("NimUI Error: Text requires a string argument (BR-04)", arg)
   let lit = arg.strVal
   result = quote do:
     RootView(kind: rkText, text: `lit`, modifiers: @[])
@@ -50,7 +50,7 @@ macro Text*(arg: untyped): untyped =
 macro VStack*(body: untyped): untyped =
   ## BR-02: VStack requires a block with child views.
   if body.kind != nnkStmtList and body.kind != nnkStmtListExpr:
-    error("nimui Error: VStack requires a block with child views (BR-02)", body)
+    error("NimUI Error: VStack requires a block with child views (BR-02)", body)
   # Workaround for Nim 2.x macro hygiene: we bind the children seq
   # to a fresh ident outside of `quote do:` so subsequent
   # `quote do:` blocks reuse the same gensym'd identifier.
@@ -69,7 +69,7 @@ macro VStack*(body: untyped): untyped =
 
 macro HStack*(body: untyped): untyped =
   if body.kind != nnkStmtList and body.kind != nnkStmtListExpr:
-    error("nimui Error: HStack requires a block with child views (BR-02)", body)
+    error("NimUI Error: HStack requires a block with child views (BR-02)", body)
   let childrenSym = genSym(nskVar, "nimuiChildren")
   let blockBody = newStmtList()
   blockBody.add quote do:
@@ -87,15 +87,15 @@ macro Button*(text: untyped, action: untyped): untyped =
   var label = ""
   if text.kind == nnkExprEqExpr and text[0].eqIdent("text"):
     if text[1].kind != nnkStrLit:
-      error("nimui Error: Button requires text = \"...\" string argument (BR-04)", text)
+      error("NimUI Error: Button requires text = \"...\" string argument (BR-04)", text)
     label = text[1].strVal
   else:
     if text.kind != nnkStrLit:
-      error("nimui Error: Button requires text = \"...\" string argument (BR-04)", text)
+      error("NimUI Error: Button requires text = \"...\" string argument (BR-04)", text)
     label = text.strVal
   ## Validate that an action block is provided (BR-03)
   if action.kind != nnkStmtList and action.kind != nnkStmtListExpr:
-    error("nimui Error: Button requires an action block (BR-03)", action)
+    error("NimUI Error: Button requires an action block (BR-03)", action)
   ## For now we store a placeholder string for the action code. In a full
   ## implementation this would be the source code of the block, compiled to JS.
   let actionCode = "/* action code */"
@@ -113,11 +113,11 @@ macro ui*(body: untyped): untyped =
   ## Top-level DSL entry point.
   ## BR-01: the body must contain a single root view expression.
   if body.kind != nnkStmtList and body.kind != nnkStmtListExpr:
-    error("nimui Error: ui block must contain a single root view (BR-01)", body)
+    error("NimUI Error: ui block must contain a single root view (BR-01)", body)
   if body.len == 0:
-    error("nimui Error: ui block is empty (BR-01)", body)
+    error("NimUI Error: ui block is empty (BR-01)", body)
   if body.len > 1:
-    error("nimui Error: ui block must contain a single root view (BR-01)", body)
+    error("NimUI Error: ui block must contain a single root view (BR-01)", body)
   let rootExpr = body[0]
   result = quote do:
     block:

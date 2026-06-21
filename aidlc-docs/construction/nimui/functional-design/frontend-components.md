@@ -1,6 +1,6 @@
-# Frontend Components — nimui DSL Component Reference
+# Frontend Components — NimUI DSL Component Reference
 
-> **Note**: nimui is a UI _library_ (not an application), so "frontend
+> **Note**: NimUI is a UI _library_ (not an application), so "frontend
 > components" here refer to the DSL API components that users compose to build
 > UIs.
 

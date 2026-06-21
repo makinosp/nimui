@@ -1,7 +1,7 @@
 # Requirements Clarification Questions
 
 Please answer the following questions to clarify the requirements for the
-**nimui** project. Fill in the letter choice after the `[Answer]:` tag for each
+**NimUI** project. Fill in the letter choice after the `[Answer]:` tag for each
 question. If none of the options match, choose the last option (Other) and
 describe your preference.
 
@@ -9,7 +9,7 @@ describe your preference.
 
 ## Question 1
 
-What is the purpose and vision of the **nimui** project? What problem does it
+What is the purpose and vision of the **NimUI** project? What problem does it
 aim to solve?
 
 A) A Nim-based UI framework or library for building desktop/mobile applications

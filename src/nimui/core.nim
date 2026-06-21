@@ -1,4 +1,4 @@
-## nimui/core — Domain entities (View concept, root types, handlers)
+## NimUI/core — Domain entities (View concept, root types, handlers)
 ##
 ## Mirrors `aidlc-docs/construction/nimui/functional-design/domain-entities.md`.
 ##
