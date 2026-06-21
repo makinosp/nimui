@@ -5,6 +5,9 @@ build/
 tests/test_nimui
 tests/test_padding_only
 
+# Exclude Nim JS backend compiled output
+src/nimui.js
+
 # Exclude Nimble generated files (if any)
 *.nimble
 
