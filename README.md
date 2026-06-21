@@ -84,6 +84,44 @@ The `ui` macro collects view declarations at compile time into a `UiBuilder`. At
 
 **v0.1.0** — MVP. Core components (`Text`, `VStack`, `HStack`, `Button`) and basic modifiers are implemented. See `aidlc-docs/` for design documentation.
 
+## Disclaimer
+
+> **⚠️ Experimental — Under Active Development**
+>
+> NimUI is an experimental project (v0.1.0) and is still under active development.
+> Not all features are stable, and the API may change without notice.
+
+### Relation to SwiftUI
+
+NimUI is **inspired by** SwiftUI's declarative syntax but is **not a full reimplementation** of SwiftUI. The following major SwiftUI features are **not yet supported**:
+
+| Category | SwiftUI Feature | Status |
+| -------- | --------------- | ------ |
+| **Layout** | `List`, `Form`, `ScrollView` | ❌ Not implemented |
+| | `LazyVStack`, `LazyHStack`, `Grid` | ❌ Not implemented |
+| | `Spacer`, `Divider` | ❌ Not implemented |
+| **Navigation** | `NavigationView`, `NavigationLink` | ❌ Not implemented |
+| | `TabView`, `Sheet`, `FullScreenCover` | ❌ Not implemented |
+| **State Management** | `@State`, `@Binding` | ❌ Not implemented |
+| | `@ObservedObject`, `@EnvironmentObject` | ❌ Not implemented |
+| | `@Environment` | ❌ Not implemented |
+| **Controls** | `Toggle`, `Slider`, `Stepper` | ❌ Not implemented |
+| | `Picker`, `TextField`, `SecureField` | ❌ Not implemented |
+| | `TextEditor`, `DatePicker`, `ColorPicker` | ❌ Not implemented |
+| **Modifiers** | `.frame()`, `.background()`, `.overlay()` | ❌ Not implemented |
+| | `.border()`, `.shadow()`, `.clipShape()` | ❌ Not implemented |
+| | `.rotation()`, `.scale()`, `.animation()` | ❌ Not implemented |
+| | `.transition()`, `.gesture()` | ❌ Not implemented |
+| | `.onAppear()`, `.onDisappear()` | ❌ Not implemented |
+| **Styling** | `Color`, `Font`, `Image` | ❌ Not implemented |
+| | `Shape` (Circle, Rectangle, etc.) | ❌ Not implemented |
+| **Accessibility** | `.accessibilityLabel()`, `.accessibilityHint()` | ❌ Not implemented |
+| **Advanced** | `ForEach`, conditional `ViewBuilder` | ❌ Not implemented |
+| | `matchedGeometryEffect`, `preference` | ❌ Not implemented |
+| | `onChange` | ❌ Not implemented |
+
+This list is not exhaustive. Contributions are welcome!
+
 ## License
 
 BSD 3-Clause. See [LICENSE](LICENSE) for details.
