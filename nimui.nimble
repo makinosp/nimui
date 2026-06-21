@@ -3,7 +3,7 @@
 version       = "0.1.0"
 author        = "makinosp"
 description   = "SwiftUI-style declarative UI DSL for Nim (HTML/CSS backend, Nim JS target)"
-license       = "MIT"
+license       = "BSD-3-Clause"
 srcDir        = "src"
 bin           = @[]
 
