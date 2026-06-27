@@ -17,3 +17,5 @@ src/nimui.js
 # Exclude editor swap files
 *~
 *.swp
+nimble.develop
+nimble.paths
