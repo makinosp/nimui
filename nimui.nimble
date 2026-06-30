@@ -19,6 +19,9 @@ task build, "Build the NimUI library (Nim JS backend)":
 task buildExample, "Build the hello-world example (Nim JS backend)":
   exec "nim js --path:src -d:release --opt:size -o:build/hello.js examples/hello.nim"
 
+task buildCounter, "Build the counter example (Nim JS backend)":
+  exec "nim js --path:src -d:release --opt:size -o:build/counter.js examples/counter.nim"
+
 task test, "Run NimUI unit tests":
   exec "nim c -r --path:src tests/test_nimui.nim"
 
