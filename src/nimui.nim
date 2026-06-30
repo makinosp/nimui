@@ -8,9 +8,9 @@
 ## Nim 2.2.4's `=destroy` operator issue on `NimNode` (ref type) when
 ## macros are split across modules with overlapping `import std/macros`.
 
-from nimui/core import Modifier, RootKind, RootView, Handler
+from nimui/core import Modifier, RootKind, RootView, Handler, State, StateID, StateObserver, gStateObservers
 
-from nimui/render import renderRoot, renderHandlers
+from nimui/render import renderRoot, renderHandlers, renderStateBindings
 import std/macros as macrosMod
 
 when not defined(js) and not defined(nimuiTestMode):
@@ -20,6 +20,7 @@ type
   UiBuilder* = object
     root*:     RootView
     handlers*: seq[Handler]
+    observers*: seq[StateObserver]  ## State observers for reactive binding (FR-S2)
     nextId*:   int
 
 ## Thread-local storage for Button handlers during ui macro expansion.
@@ -28,24 +29,63 @@ type
 var gButtonHandlers* {.threadvar.}: seq[Handler]
 var gButtonNextId* {.threadvar.}: int
 
+## State ID counter for generating unique state identifiers
+var gStateNextId* {.threadvar.}: int
+
+proc State*[T](initial: T): State[T] =
+  ## Creates a reactive state wrapper (FR-S1).
+  ## Returns a State[T] object with a unique ID.
+  inc gStateNextId
+  result = State[T](id: gStateNextId, value: initial, elementIds: @[])
+
+proc bindState*[T](state: var State[T], elementId: string) =
+  ## Binds a DOM element ID to this state (FR-S2).
+  state.elementIds.add(elementId)
+
 proc render*(b: UiBuilder): string =
   ## Renders a `UiBuilder` to a complete HTML fragment, including any
-  ## generated `<script>` event handlers.
+  ## generated `<script>` event handlers and state bindings (FR-S1..S3).
   let body = renderRoot(b.root)
-  if b.handlers.len == 0:
+  var scriptParts: seq[string]
+  if b.handlers.len > 0:
+    scriptParts.add(renderHandlers(b.handlers))
+  if b.observers.len > 0:
+    scriptParts.add(renderStateBindings(b.observers))
+  if scriptParts.len == 0:
     return body
-  let script = renderHandlers(b.handlers)
-  body & "\n<script>\n" & script & "\n</script>"
+  result = body
+  for part in scriptParts:
+    result.add("\n<script>\n")
+    result.add(part)
+    result.add("\n</script>")
 
 # --- Macros ---------------------------------------------------------------
 
 macro Text*(arg: untyped): untyped =
   ## BR-04: requires a string literal as the first argument.
-  if arg.kind != nnkStrLit:
-    error("NimUI Error: Text requires a string argument (BR-04)", arg)
-  let lit = arg.strVal
-  result = quote do:
-    RootView(kind: rkText, text: `lit`, modifiers: @[])
+  ## Also supports State[T] objects for reactive text binding (FR-S2).
+  ## Usage: Text("static") or Text(myState.value)
+  if arg.kind == nnkStrLit:
+    # Static text case
+    let lit = arg.strVal
+    result = quote do:
+      RootView(kind: rkText, text: `lit`, modifiers: @[], elementId: "")
+  elif arg.kind == nnkDotExpr and arg[1].eqIdent("value"):
+    # State binding case - arg is state.value
+    # Generate element ID and register binding
+    let elemIdSym = genSym(nskLet, "nimuiElemId")
+    let stateSym = arg[0]  # The state variable
+    result = quote do:
+      block:
+        let `elemIdSym` = "nimui_text_" & $`stateSym`.id
+        gStateObservers.add(StateObserver(
+          stateId: `stateSym`.id,
+          elementId: `elemIdSym`,
+          updateFn: "nimui_updateElement('" & `elemIdSym` & "', newValue);"
+        ))
+        RootView(kind: rkText, text: $`stateSym`.value, modifiers: @[], elementId: `elemIdSym`)
+  else:
+    error("NimUI Error: Text requires a string argument or State.value (BR-04)", arg)
 
 macro VStack*(body: untyped): untyped =
   ## BR-02: VStack requires a block with child views.
@@ -112,6 +152,7 @@ macro Button*(text: untyped, action: untyped): untyped =
 macro ui*(body: untyped): untyped =
   ## Top-level DSL entry point.
   ## BR-01: the body must contain a single root view expression.
+  ## FR-S1: collects state IDs for reactive rendering.
   if body.kind != nnkStmtList and body.kind != nnkStmtListExpr:
     error("NimUI Error: ui block must contain a single root view (BR-01)", body)
   if body.len == 0:
@@ -123,5 +164,7 @@ macro ui*(body: untyped): untyped =
     block:
       gButtonNextId = 0
       gButtonHandlers = @[]
+      gStateNextId = 0
+      gStateObservers = @[]
       let root = `rootExpr`
-      UiBuilder(root: root, handlers: gButtonHandlers, nextId: gButtonNextId)
+      UiBuilder(root: root, handlers: gButtonHandlers, observers: gStateObservers, nextId: gButtonNextId)

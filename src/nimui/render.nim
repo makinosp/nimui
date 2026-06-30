@@ -50,6 +50,13 @@ proc styleAttr*(mods: seq[Modifier]): string =
     buf.add(";")
   result = " style=\"" & buf & "\""
 
+proc idAttr*(view: RootView): string =
+  ## Returns an id attribute if elementId is set (FR-S2).
+  if view.elementId.len > 0:
+    " id=\"" & view.elementId & "\""
+  else:
+    ""
+
 proc classAttr*(kind: RootKind, view: RootView): string =
   ## BR-09: `nimui-{kind}-{hash}`.
   let kindName = case kind
@@ -63,25 +70,28 @@ proc renderRoot*(view: RootView): string =
   ## Renders a RootView to an HTML fragment.
   case view.kind
   of rkText:
+    let id = idAttr(view)
     let cls = classAttr(rkText, view)
     let st  = styleAttr(view.modifiers)
-    "<span" & cls & st & ">" & htmlEscape(view.text) & "</span>"
+    "<span" & id & cls & st & ">" & htmlEscape(view.text) & "</span>"
   of rkVStack:
+    let id = idAttr(view)
     let cls = classAttr(rkVStack, view)
     let st  = styleAttr(@[Modifier(property: "display", value: "flex"),
                           Modifier(property: "flex-direction", value: "column")] &
                         view.modifiers)
-    var body = "<div" & cls & st & ">"
+    var body = "<div" & id & cls & st & ">"
     for c in view.children:
       body.add(renderRoot(c))
     body.add("</div>")
     body
   of rkHStack:
+    let id = idAttr(view)
     let cls = classAttr(rkHStack, view)
     let st  = styleAttr(@[Modifier(property: "display", value: "flex"),
                           Modifier(property: "flex-direction", value: "row")] &
                         view.modifiers)
-    var body = "<div" & cls & st & ">"
+    var body = "<div" & id & cls & st & ">"
     for c in view.children:
       body.add(renderRoot(c))
     body.add("</div>")
@@ -106,4 +116,32 @@ proc renderHandlers*(handlers: seq[Handler]): string =
     else:
       buf.add("  " & h.bodyStmt & "\n")
     buf.add("}\n")
+  buf
+
+proc renderStateBindings*(observers: seq[StateObserver]): string =
+  ## Generates JS state binding initialization code (FR-S2, FR-S3).
+  ## Creates the nimui_state_registry and bindState functions.
+  if observers.len == 0:
+    return ""
+  var buf = newStringOfCap(observers.len * 100)
+  buf.add("// NimUI State Management\n")
+  buf.add("var nimui_state_registry = {};\n\n")
+  buf.add("function nimui_updateElement(elementId, newValue) {\n")
+  buf.add("  var el = document.getElementById(elementId);\n")
+  buf.add("  if (el) { el.innerText = newValue; }\n")
+  buf.add("}\n\n")
+  buf.add("function nimui_bindState(stateId, elementId) {\n")
+  buf.add("  if (!nimui_state_registry[stateId]) {\n")
+  buf.add("    nimui_state_registry[stateId] = [];\n")
+  buf.add("  }\n")
+  buf.add("  nimui_state_registry[stateId].push(elementId);\n")
+  buf.add("}\n\n")
+  buf.add("function nimui_notifyStateChanged(stateId, newValue) {\n")
+  buf.add("  var elements = nimui_state_registry[stateId];\n")
+  buf.add("  if (elements) {\n")
+  buf.add("    for (var i = 0; i < elements.length; i++) {\n")
+  buf.add("      nimui_updateElement(elements[i], newValue);\n")
+  buf.add("    }\n")
+  buf.add("  }\n")
+  buf.add("}\n")
   buf

@@ -133,3 +133,39 @@ suite "NimUI MVP":
       Button(text = "OK"):
         discard
     check doc.handlers.len == 1
+
+suite "NimUI State Management (FR-S1..S3)":
+  test "State[T] can be created with initial value":
+    let count = State(0)
+    check count.value == 0
+    check count.id > 0
+
+  test "State[T] value can be mutated":
+    var count = State(0)
+    count.value = 5
+    check count.value == 5
+
+  test "Text can bind to State.value":
+    let count = State(42)
+    let doc = ui:
+      Text(count.value)
+    let html = doc.render()
+    check "42" in html
+    check "id=\"nimui_text_" in html
+    check doc.observers.len == 1
+
+  test "State binding generates observer registration":
+    let count = State(0)
+    let doc = ui:
+      Text(count.value)
+    check doc.observers.len == 1
+    check doc.observers[0].stateId == count.id
+    check doc.observers[0].elementId.len > 0
+
+  test "State binding generates JS update code":
+    let count = State(0)
+    let doc = ui:
+      Text(count.value)
+    let html = doc.render()
+    check "nimui_updateElement" in html
+    check "nimui_bindState" in html

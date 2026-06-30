@@ -24,6 +24,7 @@ type
     ## `modifiers` is hoisted out of the `case` branches because Nim's
     ## `object case` forbids fields that share names across branches.
     modifiers*: seq[Modifier]
+    elementId*: string          ## DOM element ID for state binding (FR-S2)
     case kind*: RootKind
     of rkText:
       text*: string
@@ -37,6 +38,28 @@ type
     ## A generated event handler. Compiled to a JS function on `nim js`.
     id*:       int
     bodyStmt*: string          ## Nim source of the action block (for inspection/tests)
+
+# --- State Management (FR-S1) ----------------------------------------------
+
+type
+  StateID* = int
+
+  State*[T] = object
+    ## Reactive state wrapper that tracks value and notifies subscribers.
+    ## Compiles to a JavaScript object on `nim js` backend.
+    id*:         StateID     ## Unique identifier for this state
+    value*:      T           ## Current value
+    elementIds*: seq[string] ## DOM element IDs bound to this state
+
+  StateObserver* = object
+    ## Observer callback for state changes.
+    stateId*:   StateID
+    elementId*: string
+    updateFn*:  string        ## JS update function code
+
+# Global state registry (thread-local for macro expansion)
+var gStateRegistry* {.threadvar.}: seq[StateID]
+var gStateObservers* {.threadvar.}: seq[StateObserver]
 
 ## Documentation-only View concept (see domain-entities.md).
 ## Not used for dispatch — see RootView above.
